@@ -18,12 +18,10 @@ class BorrowingController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'borrowing_fine' => 'nullable|numeric|min:0',
             'borrowing_notes' => 'nullable|string|max:255',
         ]);
 
         $borrowing = Borrowing::findOrFail($id);
-        $borrowing->borrowing_fine = $request->borrowing_fine;
         $borrowing->borrowing_notes = $request->borrowing_notes;
         $borrowing->save();
 

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 
 class Borrowing extends Model
 {
@@ -22,21 +23,30 @@ class Borrowing extends Model
         'borrowing_date',
     ];
 
-// App\Models\Borrowing.php
+    // Relasi ke user
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'borrowing_user_id', 'id');
+    }
 
-public function user()
-{
-    return $this->belongsTo(User::class, 'borrowing_user_id', 'id');
-}
+    // Relasi ke detail peminjaman
+    public function details()
+    {
+        return $this->hasMany(BorrowingDetail::class, 'detail_borrowing_id');
+    }
 
+    // Accessor untuk menghitung denda
+    public function getFineAttribute()
+    {
+        if ($this->borrowing_isreturned) {
+            return $this->borrowing_fine;
+        }
 
-public function details()
-{
-    return $this->hasMany(BorrowingDetail::class, 'detail_borrowing_id');
-}
+        $dateToUse = $this->borrowing_date ?: $this->created_at;
+        $borrowingDate = Carbon::parse($dateToUse);
+        $now = now();
+        $weeksOverdue = floor($borrowingDate->diffInWeeks($now, false) - 1); // grace period 1 minggu
 
-
-
-
-
+        return max(0, $weeksOverdue * 500);
+    }
 }

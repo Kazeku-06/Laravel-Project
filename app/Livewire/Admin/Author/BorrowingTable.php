@@ -50,7 +50,7 @@ public function markAsReturned($borrowingId)
 {
     $borrowing = \App\Models\Borrowing::findOrFail($borrowingId);
     $borrowing->borrowing_isreturned = true;
-    $borrowing->borrowing_fine = 0; // No fine when admin marks as returned
+    $borrowing->borrowing_fine = $borrowing->fine; // Set the calculated fine
     $borrowing->save();
 
     // Refresh the selected borrowing data

@@ -25,7 +25,7 @@
                         <th class="px-4 py-3">Book</th>
                         <th class="px-4 py-3">Status</th>
                         <th class="px-4 py-3">Borrow date</th>
-                        <th class="px-4 py-3">Fine</th>
+                        <th class="px-4 py-3">Denda</th>
                         <th class="px-4 py-3">Notes</th>
                         <th class="px-4 py-3">Action</th>
                     </tr>
@@ -48,17 +48,17 @@
                             </td>
                             <td class="px-4 py-3">{{ $borrowing->created_at->format('d M Y') }}</td>
                             <td class="px-4 py-3">
-                                <form method="POST" action="{{ route('admin.borrowings.update', $borrowing->borrowing_id) }}" class="flex flex-col gap-2">
-                                    @csrf
-                                    <input type="number" step="0.01" name="borrowing_fine" value="{{ $borrowing->borrowing_fine }}" class="w-24 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition">
+                                Rp {{ number_format($borrowing->fine, 0, ',', '.') }}
                             </td>
                             <td class="px-4 py-3">
+                                <form method="POST" action="{{ route('admin.borrowings.update', $borrowing->borrowing_id) }}" class="flex flex-col gap-2">
+                                    @csrf
                                     <textarea name="borrowing_notes" class="w-72 h-20 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition">{{ $borrowing->borrowing_notes }}</textarea>
                             </td>
                             <td class="px-4 py-3">
                                 <div class="flex items-center gap-2">
                                     <button type="button"
-                                        wire:click="showDetails('{{ $borrowing->borrowing_id }}')" 
+                                        wire:click="showDetails('{{ $borrowing->borrowing_id }}')"
                                         class="min-w-[110px] bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-800 transition font-medium">
                                         Lihat Detail
                                     </button>
